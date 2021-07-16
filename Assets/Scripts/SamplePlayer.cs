@@ -1,12 +1,12 @@
 /******************************************************************************
-Author: Elyas Chua-Aziz
+Author: Darrik Tan
 
 Name of Class: DemoPlayer
 
 Description of Class: This class will control the movement and actions of a 
                         player avatar based on user input.
 
-Date Created: 09/06/2021
+Date Created: 
 ******************************************************************************/
 
 using System.Collections;
@@ -21,11 +21,27 @@ public class SamplePlayer : MonoBehaviour
     [SerializeField]
     private float moveSpeed;
 
+    /// <summary>
+    /// The power of the player's jump
+    /// </summary>
+    public float jumpPower;
+
+    /// <summary>
+    /// How much of jumpPower the player double jumps with.
+    /// </summary>
+    //public float doubleJumpFactor = 0.5f;
+
+    public Rigidbody myRigidbody;
+
     [SerializeField]
     private float rotationSpeed;
 
     [SerializeField]
     private float interactionDistance;
+
+    private bool isGrounded = true;
+
+    private bool doublejumped = false;
 
     /// <summary>
     /// The camera attached to the player model.
@@ -37,6 +53,8 @@ public class SamplePlayer : MonoBehaviour
     private string currentState;
 
     private string nextState;
+
+    public GameObject TheKey;
 
     // Start is called before the first frame update
     void Start()
@@ -54,6 +72,7 @@ public class SamplePlayer : MonoBehaviour
 
         CheckRotation();
         InteractionRaycast();
+        CheckJump();
     }
 
     private void InteractionRaycast()
@@ -71,7 +90,40 @@ public class SamplePlayer : MonoBehaviour
             // do stuff here
             if (Input.GetKeyDown(KeyCode.E))
             {
-                hitinfo.transform.GetComponent<Teleporting>().Interact();
+                if (hitinfo.transform.tag == "Teleporter")
+                {
+                    hitinfo.transform.GetComponent<Teleporting>().Interact();
+                }
+                if (hitinfo.transform.tag == "Key")
+                {
+                    hitinfo.transform.GetComponent<Collectibles>().Interact();
+                }
+                if (hitinfo.transform.tag == "Coins")
+                {
+                    hitinfo.transform.GetComponent<Collectibles>().Interact();
+                }
+            }
+        }
+    }
+    private void GroundRaycast()
+    {
+        Debug.DrawLine(playerCamera.transform.position,
+                playerCamera.transform.position + playerCamera.transform.up * -9f);
+
+        int groundmask = 1 << LayerMask.NameToLayer("Ground");
+
+        RaycastHit hitinfo;
+        if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.up * -1f,
+            out hitinfo, -9f, groundmask))
+        {
+            if (hitinfo.collider != null)
+            {
+                isGrounded = true;
+                doublejumped = false;
+            }
+            else
+            {
+                isGrounded = false;
             }
         }
     }
@@ -150,7 +202,30 @@ public class SamplePlayer : MonoBehaviour
         {
             return false;
         }
+    }
 
+    /// <summary>
+    /// Checks for player input to execute jumping
+    /// </summary>
+    private void CheckJump()
+    {
+        if (isGrounded)
+        { 
+            Debug.Log("jump");
+            // If the player presses Spacebar
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                myRigidbody.AddForce(transform.up * jumpPower, ForceMode.Impulse);
+            }
+        }
+        else
+        {
+            if (doublejumped == false)
+            {
+                myRigidbody.AddForce(transform.up * jumpPower, ForceMode.Impulse);
+                doublejumped = true;
+            }
+        }
     }
 
     private void OnCollisionEnter(Collision collision)
