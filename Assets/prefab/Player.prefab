@@ -129,7 +129,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 5
   rotationSpeed: 170
-  interactionDistance: 0
+  interactionDistance: 4
   playerCamera: {fileID: 0}
 --- !u!1 &5674519699738299407
 GameObject:

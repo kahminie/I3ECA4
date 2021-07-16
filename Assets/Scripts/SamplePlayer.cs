@@ -71,7 +71,7 @@ public class SamplePlayer : MonoBehaviour
             // do stuff here
             if (Input.GetKeyDown(KeyCode.E))
             {
-                hitinfo.transform.GetComponent<InteractableObject>().Interact();
+                hitinfo.transform.GetComponent<Teleporting>().Interact();
             }
         }
     }
