@@ -19,6 +19,7 @@ public class BlockedDoor : MonoBehaviour
             if (ThePlayer.GetComponent<SamplePlayer>().numKey == KeysNeeded)
             {
                 Debug.Log("key door unlocked");
+                ThePlayer.GetComponent<SamplePlayer>().IncreaseDoor();
                 gameObject.SetActive(false);
             }
             else
@@ -31,6 +32,7 @@ public class BlockedDoor : MonoBehaviour
             if (ThePlayer.GetComponent<SamplePlayer>().numCoin == CoinNeeded)
             {
                 Debug.Log("coin door unlocked");
+                ThePlayer.GetComponent<SamplePlayer>().IncreaseCoin();
                 gameObject.SetActive(false);
             }
             else
@@ -43,6 +45,7 @@ public class BlockedDoor : MonoBehaviour
             if (ThePlayer.GetComponent<SamplePlayer>().numWeapon == WeaponNeeded)
             {
                 Debug.Log("treasure door unlocked");
+                ThePlayer.GetComponent<SamplePlayer>().IncreaseTreasure();
                 gameObject.SetActive(false);
             }
             else

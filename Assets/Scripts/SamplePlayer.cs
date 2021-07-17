@@ -12,6 +12,7 @@ Date Created:
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class SamplePlayer : MonoBehaviour
 {
@@ -38,9 +39,26 @@ public class SamplePlayer : MonoBehaviour
 
     private bool doublejumped = false;
 
+    /// <summary>
+    /// Initilaization of items needed to complete quest
+    /// </summary>
     public int numKey = 0;
     public int numCoin = 0;
     public int numWeapon = 0;
+    public int numDoor = 0;
+    public int numTreasure = 0;
+
+    public GameObject stage1;
+    public GameObject stage2;
+    public GameObject stage3;
+    public GameObject stage4;
+    public GameObject stage5;
+
+    public GameObject qcCanvas;
+
+    public GameObject npc1Canvas;
+
+    public GameObject npc2Canvas;
 
     /// <summary>
     /// The camera attached to the player model.
@@ -57,6 +75,7 @@ public class SamplePlayer : MonoBehaviour
     void Start()
     {
         nextState = "Idle";
+        qcCanvas.gameObject.SetActive(false);
     }
 
     // Update is called once per frame
@@ -116,20 +135,26 @@ public class SamplePlayer : MonoBehaviour
                 {
                     hitinfo.transform.GetComponent<BlockedDoor>().Interact();
                 }
+                if (hitinfo.transform.tag == "NPC1")
+                {
+                    InteractNpc1();
+                }
+                if (hitinfo.transform.tag == "NPC2")
+                {
+                    Debug.Log("lll");
+                    InteractNpc2();
+                }
             }
         }
     }
 
     private void GroundRaycast()
     {
-        Debug.DrawLine(playerCamera.transform.position, Vector3.down * 0.01f);
-
-        int groundmask = 1 << LayerMask.NameToLayer("Ground");
-
-        RaycastHit hitinfo;
-        if (Physics.Raycast(playerCamera.transform.position, Vector3.down, out hitinfo, 0.1f, groundmask))
+        RaycastHit hitground;
+        if (Physics.Raycast(playerCamera.transform.position, Vector3.down,
+            out hitground, 2))
         {
-            if (hitinfo.collider != null)
+            if (hitground.transform.tag == "Ground")
             {
                 isGrounded = true;
                 doublejumped = false;
@@ -145,18 +170,71 @@ public class SamplePlayer : MonoBehaviour
     {
         ++numKey;
         Debug.Log(numKey);
+        stage1.GetComponent<Text>().text = numKey.ToString();
+        if (numKey == 1)
+        {
+            StartCoroutine(StageComplete());
+        }
     }
 
     public void IncreaseCoin()
     {
         numCoin += 1;
         Debug.Log(numCoin);
+        stage2.GetComponent<Text>().text = numCoin.ToString();
+        if (numCoin == 5)
+        {
+            StartCoroutine(StageComplete());
+        }    
     }
 
     public void IncreaseWeapon()
     {
         numWeapon += 1;
         Debug.Log(numWeapon);
+        stage3.GetComponent<Text>().text = numWeapon.ToString();
+        if (numWeapon == 1)
+        {
+            StartCoroutine(StageComplete());
+        }
+    }
+
+    public void IncreaseDoor()
+    {
+        numDoor += 1;
+        stage4.GetComponent<Text>().text = numDoor.ToString();
+        if (numDoor == 1)
+        {
+            StartCoroutine(StageComplete());
+        }
+    }
+
+    public void IncreaseTreasure()
+    {
+        numTreasure += 1;
+        stage5.GetComponent<Text>().text = numTreasure.ToString();
+        if (numTreasure == 1)
+        {
+            StartCoroutine(StageComplete());
+        }
+    }
+
+    public IEnumerator StageComplete()
+    {
+        qcCanvas.gameObject.SetActive(true);
+        yield return new WaitForSeconds(2);
+        qcCanvas.gameObject.SetActive(false); 
+    }
+
+    public void InteractNpc1()
+    {
+        npc1Canvas.gameObject.SetActive(true);
+    }
+
+    public void InteractNpc2()
+    {
+        Debug.Log("kokok");
+        npc2Canvas.gameObject.SetActive(true);
     }
 
     /// <summary>
