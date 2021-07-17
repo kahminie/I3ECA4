@@ -8,11 +8,15 @@ public class BlockedDoor : MonoBehaviour
 
     public int CoinNeeded;
 
+    public int KeysNeeded;
+
+    public int WeaponNeeded;
+
     public void Interact()
     {
         if (gameObject.tag == "KeyDoor")
         {
-            if (ThePlayer.GetComponent<SamplePlayer>().numKey == 1)
+            if (ThePlayer.GetComponent<SamplePlayer>().numKey == KeysNeeded)
             {
                 Debug.Log("key door unlocked");
                 gameObject.SetActive(false);
@@ -32,6 +36,18 @@ public class BlockedDoor : MonoBehaviour
             else
             {
                 Debug.Log("coin door locked");
+            }
+        }
+        if (gameObject.tag == "TreasureDoor")
+        {
+            if (ThePlayer.GetComponent<SamplePlayer>().numWeapon == WeaponNeeded)
+            {
+                Debug.Log("treasure door unlocked");
+                gameObject.SetActive(false);
+            }
+            else
+            {
+                Debug.Log("treasure door locked");
             }
         }
     }

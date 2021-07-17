@@ -9,6 +9,8 @@ TagManager:
   - Coins
   - KeyDoor
   - CoinDoor
+  - TreasureDoor
+  - Weapon
   layers:
   - Default
   - TransparentFX
