@@ -22,5 +22,11 @@ public class Collectibles : MonoBehaviour
             ThePlayer.GetComponent<SamplePlayer>().IncreaseCoin();
             gameObject.SetActive(false);
         }
+        if (gameObject.transform.tag == "Weapon")
+        {
+            //set coins to disappear after interaction and increase coin count
+            ThePlayer.GetComponent<SamplePlayer>().IncreaseWeapon();
+            gameObject.SetActive(false);
+        }
     }
 }

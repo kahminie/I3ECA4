@@ -40,6 +40,7 @@ public class SamplePlayer : MonoBehaviour
 
     public int numKey = 0;
     public int numCoin = 0;
+    public int numWeapon = 0;
 
     /// <summary>
     /// The camera attached to the player model.
@@ -107,6 +108,14 @@ public class SamplePlayer : MonoBehaviour
                 {
                     hitinfo.transform.GetComponent<BlockedDoor>().Interact();
                 }
+                if (hitinfo.transform.tag == "Weapon")
+                {
+                    hitinfo.transform.GetComponent<Collectibles>().Interact();
+                }
+                if (hitinfo.transform.tag == "TreasureDoor")
+                {
+                    hitinfo.transform.GetComponent<BlockedDoor>().Interact();
+                }
             }
         }
     }
@@ -140,9 +149,14 @@ public class SamplePlayer : MonoBehaviour
 
     public void IncreaseCoin()
     {
-        Debug.Log(numCoin);
         numCoin += 1;
         Debug.Log(numCoin);
+    }
+
+    public void IncreaseWeapon()
+    {
+        numWeapon += 1;
+        Debug.Log(numWeapon);
     }
 
     /// <summary>
