@@ -26,11 +26,6 @@ public class SamplePlayer : MonoBehaviour
     /// </summary>
     public float jumpPower;
 
-    /// <summary>
-    /// How much of jumpPower the player double jumps with.
-    /// </summary>
-    //public float doubleJumpFactor = 0.5f;
-
     public Rigidbody myRigidbody;
 
     [SerializeField]
@@ -43,6 +38,9 @@ public class SamplePlayer : MonoBehaviour
 
     private bool doublejumped = false;
 
+    public int numKey = 0;
+    public int numCoin = 0;
+
     /// <summary>
     /// The camera attached to the player model.
     /// Should be dragged in from Inspector.
@@ -53,8 +51,6 @@ public class SamplePlayer : MonoBehaviour
     private string currentState;
 
     private string nextState;
-
-    public GameObject TheKey;
 
     // Start is called before the first frame update
     void Start()
@@ -73,6 +69,7 @@ public class SamplePlayer : MonoBehaviour
         CheckRotation();
         InteractionRaycast();
         CheckJump();
+        GroundRaycast();
     }
 
     private void InteractionRaycast()
@@ -102,19 +99,26 @@ public class SamplePlayer : MonoBehaviour
                 {
                     hitinfo.transform.GetComponent<Collectibles>().Interact();
                 }
+                if (hitinfo.transform.tag == "KeyDoor")
+                {
+                    hitinfo.transform.GetComponent<BlockedDoor>().Interact();
+                }
+                if (hitinfo.transform.tag == "CoinDoor")
+                {
+                    hitinfo.transform.GetComponent<BlockedDoor>().Interact();
+                }
             }
         }
     }
+
     private void GroundRaycast()
     {
-        Debug.DrawLine(playerCamera.transform.position,
-                playerCamera.transform.position + playerCamera.transform.up * -9f);
+        Debug.DrawLine(playerCamera.transform.position, Vector3.down * 0.01f);
 
         int groundmask = 1 << LayerMask.NameToLayer("Ground");
 
         RaycastHit hitinfo;
-        if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.up * -1f,
-            out hitinfo, -9f, groundmask))
+        if (Physics.Raycast(playerCamera.transform.position, Vector3.down, out hitinfo, 0.1f, groundmask))
         {
             if (hitinfo.collider != null)
             {
@@ -126,6 +130,19 @@ public class SamplePlayer : MonoBehaviour
                 isGrounded = false;
             }
         }
+    }
+
+    public void IncreaseKey()
+    {
+        ++numKey;
+        Debug.Log(numKey);
+    }
+
+    public void IncreaseCoin()
+    {
+        Debug.Log(numCoin);
+        numCoin += 1;
+        Debug.Log(numCoin);
     }
 
     /// <summary>
@@ -220,7 +237,7 @@ public class SamplePlayer : MonoBehaviour
         }
         else
         {
-            if (doublejumped == false)
+            if (!doublejumped)
             {
                 myRigidbody.AddForce(transform.up * jumpPower, ForceMode.Impulse);
                 doublejumped = true;

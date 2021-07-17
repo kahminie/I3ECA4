@@ -4,31 +4,23 @@ using UnityEngine;
 
 public class Collectibles : MonoBehaviour
 {
-    [HideInInspector]
-    public int KeyCount;
-
-    [HideInInspector]
-    public int CoinCount;
+    public GameObject ThePlayer;
 
     public void Interact()
     {
-        Debug.Log(KeyCount);
-        Debug.Log(CoinCount);
         //if interact with tag key then...
         if (gameObject.transform.tag == "Key")
         {
             //set key to disappear after interaction and increase key count
-            ++KeyCount;
+            ThePlayer.GetComponent<SamplePlayer>().IncreaseKey();
             gameObject.SetActive(false);
-            Debug.Log(KeyCount);
         }
         //if interact with tag coins then...
         if (gameObject.transform.tag == "Coins")
         {
             //set coins to disappear after interaction and increase coin count
-            ++CoinCount;
+            ThePlayer.GetComponent<SamplePlayer>().IncreaseCoin();
             gameObject.SetActive(false);
-            Debug.Log(CoinCount);
         }
     }
 }
