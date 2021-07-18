@@ -4,8 +4,14 @@ using UnityEngine;
 
 public class Collectibles : MonoBehaviour
 {
+    /// <summary>
+    /// reference the player to access sampleplayer script
+    /// </summary>
     public GameObject ThePlayer;
 
+    /// <summary>
+    /// when player press E to interact
+    /// </summary>
     public void Interact()
     {
         //if interact with tag key then...
