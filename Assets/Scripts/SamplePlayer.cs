@@ -202,7 +202,7 @@ public class SamplePlayer : MonoBehaviour
     {
         numCoin += 1;
         Debug.Log(numCoin);
-        stage2.GetComponent<Text>().text = numCoin.ToString();
+        stage3.GetComponent<Text>().text = numCoin.ToString();
         if (numCoin == 5)
         {
             //if stage complete display
@@ -217,7 +217,7 @@ public class SamplePlayer : MonoBehaviour
     {
         numWeapon += 1;
         Debug.Log(numWeapon);
-        stage3.GetComponent<Text>().text = numWeapon.ToString();
+        stage4.GetComponent<Text>().text = numWeapon.ToString();
         if (numWeapon == 1)
         {
             //if stage complete display
@@ -231,7 +231,7 @@ public class SamplePlayer : MonoBehaviour
     public void IncreaseDoor()
     {
         numDoor += 1;
-        stage4.GetComponent<Text>().text = numDoor.ToString();
+        stage2.GetComponent<Text>().text = numDoor.ToString();
         if (numDoor == 1)
         {
             //if stage complete display
