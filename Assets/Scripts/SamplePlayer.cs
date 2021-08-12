@@ -12,6 +12,7 @@ Date Created:
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class SamplePlayer : MonoBehaviour
 {
@@ -38,9 +39,34 @@ public class SamplePlayer : MonoBehaviour
 
     private bool doublejumped = false;
 
+    /// <summary>
+    /// Initilaization of items needed to complete quest
+    /// </summary>
     public int numKey = 0;
     public int numCoin = 0;
     public int numWeapon = 0;
+    public int numDoor = 0;
+    public int numTreasure = 0;
+
+    /// <summary>
+    /// gameobjects that will update when player complete quest
+    /// </summary>
+    public GameObject stage1;
+    public GameObject stage2;
+    public GameObject stage3;
+    public GameObject stage4;
+    public GameObject stage5;
+
+    /// <summary>
+    /// canvas that displays after stage completion
+    /// </summary>
+    public GameObject qcCanvas;
+
+    /// <summary>
+    /// textbox that displays when interact with npc
+    /// </summary>
+    public GameObject npc1Canvas;
+    public GameObject npc2Canvas;
 
     /// <summary>
     /// The camera attached to the player model.
@@ -57,6 +83,7 @@ public class SamplePlayer : MonoBehaviour
     void Start()
     {
         nextState = "Idle";
+        qcCanvas.gameObject.SetActive(false);
     }
 
     // Update is called once per frame
@@ -73,6 +100,9 @@ public class SamplePlayer : MonoBehaviour
         GroundRaycast();
     }
 
+    /// <summary>
+    /// interaction raycast to allow player to indentify object and interact
+    /// </summary>
     private void InteractionRaycast()
     {
         Debug.DrawLine(playerCamera.transform.position,
@@ -85,7 +115,7 @@ public class SamplePlayer : MonoBehaviour
             out hitinfo, interactionDistance, layermask))
         {
             // if my ray hits something, if statement is true
-            // do stuff here
+            // check what object it is and interact
             if (Input.GetKeyDown(KeyCode.E))
             {
                 if (hitinfo.transform.tag == "Teleporter")
@@ -116,20 +146,29 @@ public class SamplePlayer : MonoBehaviour
                 {
                     hitinfo.transform.GetComponent<BlockedDoor>().Interact();
                 }
+                if (hitinfo.transform.tag == "NPC1")
+                {
+                    InteractNpc1();
+                }
+                if (hitinfo.transform.tag == "NPC2")
+                {
+                    Debug.Log("lll");
+                    InteractNpc2();
+                }
             }
         }
     }
 
+    /// <summary>
+    /// Function to check if player is on the ground and if doublejumped
+    /// </summary>
     private void GroundRaycast()
     {
-        Debug.DrawLine(playerCamera.transform.position, Vector3.down * 0.01f);
-
-        int groundmask = 1 << LayerMask.NameToLayer("Ground");
-
-        RaycastHit hitinfo;
-        if (Physics.Raycast(playerCamera.transform.position, Vector3.down, out hitinfo, 0.1f, groundmask))
+        RaycastHit hitground;
+        if (Physics.Raycast(playerCamera.transform.position, Vector3.down,
+            out hitground, 2))
         {
-            if (hitinfo.collider != null)
+            if (hitground.transform.tag == "Ground")
             {
                 isGrounded = true;
                 doublejumped = false;
@@ -141,22 +180,105 @@ public class SamplePlayer : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Increments key count by 1 and update progress
+    /// </summary>
     public void IncreaseKey()
     {
         ++numKey;
         Debug.Log(numKey);
+        stage1.GetComponent<Text>().text = numKey.ToString();
+        if (numKey == 1)
+        {
+            //if stage complete display
+            StartCoroutine(StageComplete());
+        }
     }
 
+    /// <summary>
+    /// increment coin by 1 and update progress
+    /// </summary>
     public void IncreaseCoin()
     {
         numCoin += 1;
         Debug.Log(numCoin);
+        stage3.GetComponent<Text>().text = numCoin.ToString();
+        if (numCoin == 5)
+        {
+            //if stage complete display
+            StartCoroutine(StageComplete());
+        }    
     }
 
+    /// <summary>
+    /// increment weapon by 1 and update progress
+    /// </summary>
     public void IncreaseWeapon()
     {
         numWeapon += 1;
         Debug.Log(numWeapon);
+        stage4.GetComponent<Text>().text = numWeapon.ToString();
+        if (numWeapon == 1)
+        {
+            //if stage complete display
+            StartCoroutine(StageComplete());
+        }
+    }
+
+    /// <summary>
+    /// increment door by 1 and update progress
+    /// </summary>
+    public void IncreaseDoor()
+    {
+        numDoor += 1;
+        stage2.GetComponent<Text>().text = numDoor.ToString();
+        if (numDoor == 1)
+        {
+            //if stage complete display
+            StartCoroutine(StageComplete());
+        }
+    }
+
+    /// <summary>
+    /// increment treasure door by 1 and update progress
+    /// </summary>
+    public void IncreaseTreasure()
+    {
+        numTreasure += 1;
+        stage5.GetComponent<Text>().text = numTreasure.ToString();
+        if (numTreasure == 1)
+        {
+            //if stage complete display
+            StartCoroutine(StageComplete());
+        }
+    }
+
+    /// <summary>
+    /// displays stage complete UI and delays 2sec
+    /// </summary>
+    /// <returns></returns>
+    public IEnumerator StageComplete()
+    {
+        qcCanvas.gameObject.SetActive(true);
+        yield return new WaitForSeconds(2);
+        qcCanvas.gameObject.SetActive(false); 
+    }
+
+    /// <summary>
+    /// interaction with npc1
+    /// </summary>
+    public void InteractNpc1()
+    {
+        npc1Canvas.gameObject.SetActive(true);
+    }
+
+    /// <summary>
+    /// interaction with npc2
+    /// </summary>
+    public void InteractNpc2()
+    {
+        Debug.Log("kokok");
+        npc2Canvas.gameObject.SetActive(true);
     }
 
     /// <summary>
